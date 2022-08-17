@@ -1043,6 +1043,7 @@ void configSaved()
 }
 
 /* ################################## Setup ############################################# */
+
 void setup()
 {
 
@@ -1148,6 +1149,8 @@ else if (strcmp(soundOutputValue,"EXTERNAL_DAC") == 0)
   // out->SetRate(22050);//44100
   // out->SetOversampling(64);
   playBootSound();
+
+ 
 }
 
 /* ##################################### Loop ############################################# */
