@@ -192,6 +192,7 @@ ______    _____   _____     ___    ___      __      __
 #include "ESP8266SAM.h"
 #include "IotWebConf.h"
 #include "IotWebConfUsing.h"
+#include <IotWebConfMultipleWifi.h>
 
 // UpdateServer includes
 #ifdef ESP8266
@@ -324,6 +325,9 @@ iotwebconf::SelectParameter soundOutput = IotWebConfSelectParameter("Sound outpu
 iotwebconf::NumberParameter soundVolume = IotWebConfNumberParameter("Sound Volume (0 - 1.0)", "Sound_Volume", floatsoundVolume, NUMBER_LEN,  "0.5", "e.g. 0.7", "min='0' max='1' step='0.1'");
 iotwebconf::SelectParameter samVoice = IotWebConfSelectParameter("samVoice", "samVoice :", samVoiceValue, 8, (char*)samVoiceValues, (char*)samVoiceNames, sizeof(samVoiceValues) / 8, 8);
 iotwebconf::TextParameter GoogleTTSvoiceParam = iotwebconf::TextParameter("Google TTS Voice code (<a href=""https://github.com/florabtw/google-translate-tts/blob/master/src/voices.js"" target=""_blank"">list</a>)", "GoogleTTSvoice", GoogleTTSvoice, sizeof(GoogleTTSvoice));
+iotwebconf::ChainedWifiParameterGroup chainedWifiParameterGroups[] = {  iotwebconf::ChainedWifiParameterGroup("wifi1"),  iotwebconf::ChainedWifiParameterGroup("wifi2"),  iotwebconf::ChainedWifiParameterGroup("wifi3")};
+iotwebconf::MultipleWifiAddition multipleWifiAddition(  &iotWebConf,  chainedWifiParameterGroups,  sizeof(chainedWifiParameterGroups)  / sizeof(chainedWifiParameterGroups[0]));
+
 
 
 #define LED_Pin           2       // external LED pin
