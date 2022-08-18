@@ -327,7 +327,7 @@ iotwebconf::SelectParameter samVoice = IotWebConfSelectParameter("samVoice", "sa
 iotwebconf::TextParameter GoogleTTSvoiceParam = iotwebconf::TextParameter("Google TTS Voice code (<a href=""https://github.com/florabtw/google-translate-tts/blob/master/src/voices.js"" target=""_blank"">list</a>)", "GoogleTTSvoice", GoogleTTSvoice, sizeof(GoogleTTSvoice));
 iotwebconf::ChainedWifiParameterGroup chainedWifiParameterGroups[] = {  iotwebconf::ChainedWifiParameterGroup("wifi1"),  iotwebconf::ChainedWifiParameterGroup("wifi2"),  iotwebconf::ChainedWifiParameterGroup("wifi3")};
 iotwebconf::MultipleWifiAddition multipleWifiAddition(  &iotWebConf,  chainedWifiParameterGroups,  sizeof(chainedWifiParameterGroups)  / sizeof(chainedWifiParameterGroups[0]));
-
+iotwebconf::OptionalGroupHtmlFormatProvider optionalGroupHtmlFormatProvider;
 
 
 #define LED_Pin           2       // external LED pin
@@ -1073,6 +1073,8 @@ void setup()
   soundgroup.addItem(&samVoice);
   soundgroup.addItem(&GoogleTTSvoiceParam);
   
+ // -- Initializing the configuration.
+  multipleWifiAddition.init();
 
   iotWebConf.addParameterGroup(&mqttgroup);
   iotWebConf.addParameterGroup(&soundgroup);
@@ -1081,6 +1083,12 @@ void setup()
   iotWebConf.setConfigSavedCallback(&configSaved); //callback IotWebConf
   iotWebConf.getThingNameParameter()->label = "Name (for AP,MQTT,DNS)"; // rename the SSID field in web interface "Thing name" -> "SSID"
   iotWebConf.getApPasswordParameter()->label = "Password (for AP and web UI)";
+  // -- Note: multipleWifiAddition.init() calls setFormValidator, that
+  // overwrites existing formValidator setup. Thus setFormValidator
+  // should be called _after_ multipleWifiAddition.init() .
+  iotWebConf.setFormValidator(&formValidator);
+  iotWebConf.setHtmlFormatProvider(&optionalGroupHtmlFormatProvider);
+
 #ifdef LED_Pin
   iotWebConf.setStatusPin(LED_Pin);
 #endif
